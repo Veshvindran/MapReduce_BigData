@@ -1,0 +1,48 @@
+#Mapper.py
+#!/usr/bin/env python3
+
+import sys
+
+# Input: standard input (stdin)
+# Output: word (key), 1 (value)
+for line in sys.stdin:
+    # Remove leading and trailing whitespace
+    word = line.strip()
+    # Emit each word with the count of 1
+    print(f"{word}\t1")
+
+
+
+#Reducer.py
+#!/usr/bin/env python3
+import sys
+
+current_word = None
+current_count = 0
+
+# Input: word (key), list of counts (value)
+# Output: word (key), total count (value)
+for line in sys.stdin:
+    # Remove leading and trailing whitespace
+    line = line.strip()
+
+    # Parse the input we got from Mapper
+    word, count = line.split('\t')
+
+    # Convert count (currently a string) to int
+    count = int(count)
+
+    # If the current word is the same as the previous word, increment the count
+    if current_word == word:
+        current_count += count
+    else:
+        # If the word changes, emit the word along with its total count
+        if current_word is not None:
+            print(f"{current_word}\t{current_count}")
+        current_word = word
+        current_count = count
+
+# Output the last word if needed
+if current_word is not None:
+    print(f"{current_word}\t{current_count}")
+    
